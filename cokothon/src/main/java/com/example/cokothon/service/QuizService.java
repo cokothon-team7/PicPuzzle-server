@@ -8,5 +8,5 @@ import org.springframework.transaction.annotation.Transactional;
 public class QuizService {
 
     @Transactional
-    public void createQuiz()
+    public void createQuiz() {}
 }
