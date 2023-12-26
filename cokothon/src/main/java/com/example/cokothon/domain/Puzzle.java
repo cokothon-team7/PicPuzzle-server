@@ -1,5 +1,6 @@
 package com.example.cokothon.domain;
 
+import com.example.cokothon.domain.dto.PuzzleDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,4 +25,5 @@ public class Puzzle {
     private Long col;
     @Column(name = "puzzle_row")
     private Long row;
+
 }

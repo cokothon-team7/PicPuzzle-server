@@ -21,11 +21,10 @@ import java.util.UUID;
 @Service
 @Transactional(readOnly = true)
 public class PuzzleService {
-
     private final String IMAGE_BASE_PATH;
     private final PuzzleRepository puzzleRepository;
 
-    public PuzzleService(@Value("${IMAGE_PATH}") String imagePath, PuzzleRepository puzzleRepository) {
+    public PuzzleService(@Value("/Users/cheesecrust/Desktop/") String imagePath, PuzzleRepository puzzleRepository) {
         this.IMAGE_BASE_PATH = imagePath;
         this.puzzleRepository = puzzleRepository;
     }
@@ -47,6 +46,7 @@ public class PuzzleService {
         String filename = uuid + getExtensionType(image.getOriginalFilename());
         String fullPath = IMAGE_BASE_PATH + filename;
         log.info("filename: {}", filename);
+
         image.transferTo(new File(fullPath));
         return filename;
     }
