@@ -1,16 +1,31 @@
 package com.example.cokothon.repository;
 
 import com.example.cokothon.domain.Puzzle;
-import org.springframework.data.jpa.repository.JpaRepository;
+import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface PuzzleRepository extends JpaRepository<Puzzle, Long> {
+@Repository
+@RequiredArgsConstructor
+public class PuzzleRepository {
 
-    @Override
-    Puzzle save(Puzzle puzzle);
+    private final EntityManager em;
 
-    @Override
-    Optional<Puzzle> findById(Long puzzleId);
+    public void save(Puzzle puzzle) {
+        em.persist(puzzle);
+    }
 
+    public Optional<Puzzle> findById(Long id) {
+        return Optional.ofNullable(em.find(Puzzle.class, id));
+    }
+
+    public List<Puzzle> findAllByUser(User user) {
+        return em.createQuery("select p from Puzzle p where p.user.email = :email", Puzzle.class)
+                .setParameter("email", user.getUsername())
+                .getResultList();
+    }
 }

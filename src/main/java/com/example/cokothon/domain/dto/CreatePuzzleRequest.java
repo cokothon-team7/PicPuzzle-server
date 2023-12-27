@@ -5,6 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 public record CreatePuzzleRequest(
     Long col,
     Long row,
-    String hint,
-    String description
+    String category,
+    String hint
 ) { }

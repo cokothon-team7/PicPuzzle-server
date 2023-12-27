@@ -17,7 +17,12 @@ public class Puzzle {
     @Column(name = "puzzle_id")
     private Long id;
 
+    @ManyToOne
+    private User user;
+
     private String hint;
+    private String category;
+
     private String imagePath;
 
     @Column(name = "puzzle_col")

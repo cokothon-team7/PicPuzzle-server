@@ -7,6 +7,7 @@ import com.example.cokothon.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
+
+    private static final String COOKIE_NAME = "access_token";
 
     private final UserService userService;
 
@@ -31,10 +34,17 @@ public class AuthController {
     public ResponseEntity<Void> signIn(@RequestBody SignInRequest signInRequest) {
         String token = userService.signIn(signInRequest);
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtRequestFilter.AUTHORIZATION_HEADER, JwtRequestFilter.TOKEN_TYPE + token);
+        ResponseCookie cookie = ResponseCookie.from(COOKIE_NAME, token)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(60 * 60 * 24)
+                .build();
 
-        return new ResponseEntity<>(null, httpHeaders, HttpStatus.OK);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(null);
+
     }
 
 }
