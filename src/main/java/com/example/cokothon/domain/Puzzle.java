@@ -22,6 +22,7 @@ public class Puzzle {
 
     private String hint;
     private String category;
+    private String message;
 
     private String imagePath;
 

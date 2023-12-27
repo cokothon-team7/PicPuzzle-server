@@ -29,14 +29,16 @@ public class PuzzleService {
     public final PuzzleRepository puzzleRepository;
     private final UserRepository userRepository;
 
-    public PuzzleService(@Value("${IMAGE_PATH}") String imagePath, PuzzleRepository puzzleRepository, UserRepository userRepository) {
+    public PuzzleService(@Value("${IMAGE_PATH}") String imagePath, PuzzleRepository puzzleRepository,
+            UserRepository userRepository) {
         this.IMAGE_BASE_PATH = imagePath;
         this.puzzleRepository = puzzleRepository;
         this.userRepository = userRepository;
     }
 
     @Transactional
-    public Puzzle createPuzzle(CreatePuzzleRequest createPuzzleRequest, MultipartFile image, User user) throws IOException {
+    public Puzzle createPuzzle(CreatePuzzleRequest createPuzzleRequest, MultipartFile image, User user)
+            throws IOException {
         String imagePath = saveImage(image);
         com.example.cokothon.domain.User _user = userRepository.findByEmail(user.getUsername())
                 .orElseThrow(() -> new RuntimeException("유저 없음"));
@@ -45,6 +47,7 @@ public class PuzzleService {
                 .imagePath(imagePath)
                 .hint(createPuzzleRequest.hint())
                 .category(createPuzzleRequest.category())
+                .message(createPuzzleRequest.message())
                 .user(_user)
                 .col(createPuzzleRequest.col())
                 .row(createPuzzleRequest.row())
@@ -53,7 +56,7 @@ public class PuzzleService {
         return puzzle;
     }
 
-    private String saveImage(MultipartFile image) throws IOException{
+    private String saveImage(MultipartFile image) throws IOException {
         UUID uuid = UUID.randomUUID();
         String filename = uuid + getExtensionType(image.getOriginalFilename());
         String fullPath = IMAGE_BASE_PATH + filename;
